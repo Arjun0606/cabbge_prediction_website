@@ -73,6 +73,52 @@ export async function getExchangeStatus(): Promise<KalshiExchangeStatus> {
   }
 }
 
+/** Single market by ticker. Returns null when not found. ISR'd for 5 min. */
+export async function getMarket(ticker: string): Promise<KalshiMarket | null> {
+  try {
+    const res = await fetch(`${KALSHI}/markets/${encodeURIComponent(ticker)}`, {
+      next: { revalidate: REVALIDATE_SECONDS },
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { market: KalshiMarket };
+    return data.market ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Candlestick history. ISR'd for 5 min — sharp enough for SEO render. */
+export interface KalshiCandle {
+  end_period_ts: number;
+  price?: { open?: number; high?: number; low?: number; close?: number };
+}
+
+export async function getCandles(
+  ticker: string,
+  opts: { period: "1h" | "1d" } = { period: "1h" }
+): Promise<KalshiCandle[]> {
+  const periodInterval = opts.period === "1d" ? 1440 : 60;
+  const lookbackSec = opts.period === "1d" ? 90 * 86_400 : 7 * 86_400;
+  const endTs = Math.floor(Date.now() / 1000);
+  const startTs = endTs - lookbackSec;
+  try {
+    const url = new URL(`${KALSHI}/markets/${encodeURIComponent(ticker)}/candlesticks`);
+    url.searchParams.set("period_interval", String(periodInterval));
+    url.searchParams.set("start_ts", String(startTs));
+    url.searchParams.set("end_ts", String(endTs));
+    const res = await fetch(url.toString(), {
+      next: { revalidate: REVALIDATE_SECONDS },
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { candlesticks?: KalshiCandle[] };
+    return data.candlesticks ?? [];
+  } catch {
+    return [];
+  }
+}
+
 /** Friendly compact ticker label. Kalshi tickers are long; trim for display. */
 export function displayTicker(ticker: string): string {
   // KXFOMC-25-JUN → KXFOMC-JUN, KXSCOTUS-25-JAN-08 → KXSCOTUS-JAN
