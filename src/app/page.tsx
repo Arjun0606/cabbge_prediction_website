@@ -11,7 +11,7 @@
 //   7. Animation: 150-300ms range, transform/opacity only, stagger 40ms,
 //      exit ~60% of enter duration.
 
-import { motion, useScroll, useTransform, useReducedMotion, useMotionValue, useSpring } from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { POSTS } from "@/lib/posts";
@@ -19,7 +19,6 @@ import { POSTS } from "@/lib/posts";
 export default function Landing() {
   return (
     <main className="relative overflow-x-hidden bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
-      <CursorSpotlight />
       <Nav />
       <LiveTickerBar />
       <Hero />
@@ -83,46 +82,6 @@ function LiveTickerBar() {
 // A soft radial gradient that tracks the mouse, blended over the dark UI.
 // Heavy device throttling via spring physics so it never jitters.
 // =============================================================================
-
-function CursorSpotlight() {
-  const reduced = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-  const mx = useMotionValue(-1000);
-  const my = useMotionValue(-1000);
-  const x = useSpring(mx, { stiffness: 80, damping: 20 });
-  const y = useSpring(my, { stiffness: 80, damping: 20 });
-
-  useEffect(() => {
-    setMounted(true);
-    if (reduced) return;
-    const onMove = (e: MouseEvent) => {
-      mx.set(e.clientX - 300);
-      my.set(e.clientY - 300);
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [mx, my, reduced]);
-
-  // Don't render during SSR or if user prefers reduced motion.
-  if (!mounted || reduced) return null;
-
-  // A 600x600 div centered on the cursor via motion's built-in
-  // transform binding. No CSS-var trickery — no document access.
-  return (
-    <motion.div
-      aria-hidden
-      style={{ x, y }}
-      className="pointer-events-none fixed top-0 left-0 w-[600px] h-[600px] z-[2] mix-blend-screen rounded-full"
-    >
-      <div
-        className="w-full h-full"
-        style={{
-          background: "radial-gradient(circle, rgba(0, 214, 50, 0.10), transparent 60%)",
-        }}
-      />
-    </motion.div>
-  );
-}
 
 // =============================================================================
 // NAV — sticky, blurs on scroll, uses the real cabbge mascot
