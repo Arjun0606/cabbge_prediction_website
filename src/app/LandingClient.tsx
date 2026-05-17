@@ -33,6 +33,7 @@ export default function LandingClient({ markets, exchangeStatus }: LandingClient
       <LiveTickerBar markets={markets} />
       <Hero markets={markets} />
       <PhoneGallery />
+      <MascotMoment />
       <TodayOnKalshi markets={markets} />
       <LiveActivityShowcase />
       <FeatureBento />
@@ -220,20 +221,21 @@ function Hero({ markets }: { markets: KalshiMarket[] }) {
             iOS · built only for Kalshi
           </motion.p>
 
+          {/* Sculptural typography per Canvas Design System / Concrete
+              Poetry — "Information lives in design, not paragraphs."
+              Bigger headline, ruthlessly cut subhead. */}
           <WordReveal
-            className="text-5xl sm:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[0.95]"
-            words={["Your", "prediction", "market", "co-pilot."]}
+            className="text-6xl sm:text-8xl lg:text-[6.5rem] font-bold tracking-[-0.03em] leading-[0.92]"
+            words={["Your", "Kalshi,", "on", "your", "lock", "screen."]}
           />
 
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
-            className="mt-10 text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-xl leading-relaxed"
+            className="mt-10 text-xl sm:text-2xl text-[var(--color-text-secondary)] max-w-lg leading-snug"
           >
-            Track your Kalshi positions live. AI briefs on every market.
-            Form&nbsp;8949 tax exports in two taps. Lock-screen Live Activities
-            so you never miss a resolution.
+            Live positions. Briefs that read the room. Tax season already done.
           </motion.p>
 
           <motion.div
@@ -532,6 +534,49 @@ function timeToClose(iso: string): string {
   return `${Math.max(1, Math.floor(ms / 60_000))}m`;
 }
 
+// =============================================================================
+// MASCOT MOMENT — Geometric Silence at its purest. One image, two lines,
+// vast negative space. Pure Canvas Design System: information through
+// visual weight, text as rare and powerful gesture.
+// =============================================================================
+
+function MascotMoment() {
+  return (
+    <section className="relative px-6 py-48 lg:py-64">
+      <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="relative"
+        >
+          {/* Soft halo behind the mascot */}
+          <div className="absolute inset-0 -m-20 rounded-full bg-[radial-gradient(circle_at_center,_var(--color-semantic-up)_0%,_transparent_60%)] opacity-[0.18] blur-3xl" />
+          <Image
+            src="/logo.png"
+            alt="The Cabbge mascot"
+            width={240}
+            height={240}
+            className="relative"
+            priority={false}
+          />
+        </motion.div>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-16 text-5xl sm:text-7xl font-bold tracking-[-0.03em] leading-[0.95] max-w-3xl"
+        >
+          Serious tools.{" "}
+          <span className="text-[var(--color-text-secondary)]">Stupid name.</span>
+        </motion.h2>
+      </div>
+    </section>
+  );
+}
+
 function TodayOnKalshi({ markets }: { markets: KalshiMarket[] }) {
   const top = markets.slice(0, 6);
   if (top.length === 0) return null;
@@ -769,7 +814,7 @@ function PhoneMockupAIBrief({ scale = 1 }: { scale?: number }) {
           {/* AI ANALYSIS section header */}
           <div className="px-5 mb-2 flex items-center justify-between">
             <span className="text-[var(--color-cabbge-accent)] text-[10px] font-bold uppercase tracking-wider">AI Analysis</span>
-            <span className="text-white/30 text-[9px] mono">gpt-5-nano</span>
+            <span className="text-white/30 text-[9px] mono">2 min ago</span>
           </div>
 
           {/* The typed-out brief */}
@@ -980,13 +1025,17 @@ function FeatureBento() {
         <span className="text-[var(--color-text-secondary)]">Priced like a notes app.</span>
       </motion.h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <BentoCard title="AI Brief" body="GPT-powered 4-sentence analysis on any prediction market — what's moving it, what's next, what serious traders miss." span="md:col-span-2" visual={<BriefVisual />} />
-        <BentoCard title="Form 8949" body="One-tap CSV in TurboTax format. FIFO realized P&L, short vs long term auto-split." visual={<TaxVisual />} />
-        <BentoCard title="Live Activity" body="Resolution countdowns, hurricane cones, FOMC clock — directly on your lock screen." visual={<LockVisual />} />
-        <BentoCard title="Read-only by design" body="Cabbge never executes trades. We request read-only Kalshi API scope. Even if your key allows trading, we only read positions, fills, and balance — never route an order." span="md:col-span-2" visual={<ReadOnlyVisual />} />
-        <BentoCard title="KMS-encrypted keys" body="Your API key is encrypted in AWS KMS before it touches our database. We never see plaintext." visual={<KeyVisual />} />
-        <BentoCard title="5 daily triggers" body="Morning brief, pre-catalyst, resolution, news-on-position, evening digest. Customizable per category." visual={<NotifVisual />} />
-        <BentoCard title="Zero trackers" body="No analytics SDKs. No third-party ads. No behavioral profiling. Audit our privacy manifest yourself." span="md:col-span-2" visual={<TrackerVisual />} />
+        {/* Outcome-focused. No stack. No models. No paragraphs.
+            Per UI/UX Pro Max — Canvas Design System: "Information lives
+            in design, not paragraphs." Six cards, every one a single
+            user outcome with a sharp visual. */}
+        <BentoCard title="A brief on any market" body="Four sentences. What it's asking, what's moving it, what's next." span="md:col-span-2" visual={<BriefVisual />} />
+        <BentoCard title="Tax season, handled" body="One CSV. TurboTax-ready. Done." visual={<TaxVisual />} />
+        <BentoCard title="Lock-screen first" body="Resolution clocks, hurricane cones, FOMC countdowns — without unlocking." visual={<LockVisual />} />
+        <BentoCard title="Read-only by design" body="We never execute orders. Read positions, read fills, read balance — that's the entire surface area we touch." span="md:col-span-2" visual={<ReadOnlyVisual />} />
+        <BentoCard title="Your key, your trust" body="Encrypted the moment you submit. Never logged. Deleted on disconnect." visual={<KeyVisual />} />
+        <BentoCard title="Five quiet pings" body="Morning brief, pre-catalyst, resolution, news, evening. Tune them per category." visual={<NotifVisual />} />
+        <BentoCard title="Zero trackers" body="No analytics SDKs. No ads. No behavioral profiling. Read the privacy manifest yourself." span="md:col-span-2" visual={<TrackerVisual />} />
       </div>
     </section>
   );
@@ -1016,7 +1065,7 @@ function BentoCard({ title, body, span, visual }: { title: string; body: string;
 function BriefVisual() {
   return (
     <div className="rounded-xl bg-black/40 border border-white/[0.06] p-4 mono text-xs leading-relaxed">
-      <div className="text-[var(--color-cabbge-accent)] mb-1.5 text-[10px] uppercase tracking-wider">cabbge_ai · gpt-5-nano</div>
+      <div className="text-[var(--color-cabbge-accent)] mb-1.5 text-[10px] uppercase tracking-wider">cabbge_ai · brief</div>
       <p className="text-white/80">
         The market is asking if the Fed will cut by 25bps in June. Current 47¢ reflects mixed signals from May CPI…
       </p>
@@ -1152,16 +1201,30 @@ function AnimatedEquityChart() {
   );
 }
 
+/** Three states of the key lifecycle. No implementation specifics — just
+ *  the outcomes that matter to a trader handing over credentials. */
 function KeyVisual() {
+  const rows = [
+    { phase: "Submit",     state: "Encrypted before it leaves your device" },
+    { phase: "At rest",    state: "Wrapped — never logged, never plaintext" },
+    { phase: "Disconnect", state: "Permanently deleted from our systems" },
+  ];
   return (
-    <div className="rounded-xl bg-black/40 border border-white/[0.06] p-3 mono text-[10px] leading-snug">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[var(--color-text-tertiary)] uppercase tracking-wider text-[9px]">Your key</span>
-        <span className="text-[var(--color-semantic-up)] text-[9px]">AES-256-GCM</span>
-      </div>
-      <div className="text-white/40 truncate">-----BEGIN RSA PRIVATE KEY-----</div>
-      <div className="text-[var(--color-cabbge-accent)] text-center my-2 text-base">↓ KMS wrap ↓</div>
-      <div className="text-white/40 truncate tabular-nums">AQICAHj4kV2bQYrK7…</div>
+    <div className="rounded-xl bg-black/40 border border-white/[0.06] p-4 space-y-2.5">
+      {rows.map((r, i) => (
+        <motion.div
+          key={r.phase}
+          initial={{ opacity: 0, x: -6 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.4, delay: i * 0.08 }}
+          className="flex items-center gap-3"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-semantic-up)] flex-shrink-0" />
+          <span className="text-[var(--color-text-tertiary)] mono text-[10px] uppercase tracking-wider w-[68px]">{r.phase}</span>
+          <span className="text-white/80 text-[12px] leading-tight">{r.state}</span>
+        </motion.div>
+      ))}
     </div>
   );
 }

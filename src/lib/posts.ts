@@ -52,7 +52,7 @@ export const POSTS: Post[] = [
       },
       {
         q: "How does Cabbge access my Kalshi account?",
-        a: "Cabbge uses Kalshi's official API. You generate an API key pair in your Kalshi profile and paste it into Cabbge. Your private key is encrypted with AWS KMS the moment you submit it — Cabbge's database never stores it in plaintext. You can disconnect at any time, which deletes the encrypted key from our infrastructure.",
+        a: "Cabbge uses Kalshi's official API. You generate an API key pair in your Kalshi profile and paste it into Cabbge. Your private key is encrypted the moment you submit it — Cabbge's database never stores it in plaintext. You can disconnect at any time, which deletes the encrypted key from our systems.",
       },
       {
         q: "Does Cabbge work with Polymarket?",
@@ -75,17 +75,17 @@ export const POSTS: Post[] = [
         ],
       },
       {
-        heading: "How Cabbge handles your Kalshi API key with AWS KMS envelope encryption",
+        heading: "How Cabbge handles your Kalshi API key",
         paragraphs: [
           "Cabbge uses Kalshi's official RSA-key-based API authentication, the same scheme Kalshi documents for institutional integrations. You generate an API key pair inside your Kalshi profile (Profile → API Keys → Create New Key), then paste the access key ID and private key PEM into Cabbge's connect flow. The flow takes 30 seconds and replaces the previous OAuth approach that Kalshi deprecated in 2024.",
-          "Your private key is transported over TLS to our backend (Supabase Edge Functions running Hono), which wraps it with AWS KMS using envelope encryption — a standard pattern documented in the AWS security whitepaper. The wrapped 256-bit blob lives in our Postgres database; the unwrapped key only exists in process memory for the duration of one Kalshi API call (typically 80-300ms). We log zero plaintext, persist zero plaintext, and the entire security model is verified by our 220-check launch suite which includes a SQL-injection and secret-leak scan against the production endpoint.",
+          "Your private key is transported over TLS to our backend, encrypted the moment it arrives, and stored only as ciphertext. Unwrapping happens only in process memory for the duration of one Kalshi API call (typically 80-300 milliseconds). We log zero plaintext, persist zero plaintext, and the entire security model is verified by our 220-check launch suite which includes a SQL-injection and secret-leak scan against the production endpoint. The specific encryption and cloud subprocessors are documented in our privacy policy.",
         ],
       },
       {
         heading: "What makes a Kalshi tracker app trustworthy — three signals to look for",
         paragraphs: [
           "Three signals separate a trustworthy tracker from a credential-harvesting risk. First: does it publish a privacy manifest? Apple has required PrivacyInfo.xcprivacy since iOS 17.4 (April 2024). Cabbge ships one declaring every API category we touch (UserDefaults, FileTimestamp, DiskSpace, SystemBootTime) with the appropriate reason codes (CA92.1, C617.1, E174.1, 35F9.1).",
-          "Second: does it use a documented encryption scheme for your API key? We use AWS KMS — the same service that protects financial-services workloads for Fortune 500 banks. Third: what data does it send to third parties? Cabbge sends market metadata to OpenAI for the AI Brief feature, but never your trading history. We collect three data types (email, Apple user ID, purchase history), all linked to your account, none used for cross-app tracking. No analytics SDKs (no Mixpanel, no Amplitude, no Firebase Analytics), no advertising identifiers (no IDFA), no behavioral profiling.",
+          "Second: does it document its encryption posture publicly? Cabbge's privacy policy enumerates every subprocessor and the specific role they play. Third: what data does it send to third parties? Cabbge sends public Kalshi market metadata to a large language model for the AI Brief feature, but never your trading history. We collect three data types (email, Apple user ID, purchase history), all linked to your account, none used for cross-app tracking. No analytics SDKs (no Mixpanel, no Amplitude, no Firebase Analytics), no advertising identifiers (no IDFA), no behavioral profiling.",
         ],
       },
     ],

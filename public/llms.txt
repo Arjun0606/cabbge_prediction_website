@@ -1,6 +1,6 @@
 # Cabbge
 
-> Cabbge is the iOS portfolio tracker built specifically for Kalshi traders. It connects to Kalshi via the official API, surfaces positions on the lock screen via Live Activities, generates AI briefs on any market, and produces Form 8949-ready tax exports in two taps. Kalshi-only by design.
+> Cabbge is the iOS portfolio tracker built specifically for Kalshi traders. It surfaces positions on the lock screen, generates briefs on any market, and produces Form 8949-ready tax exports in two taps. Kalshi-only by design.
 
 This file follows the [llms.txt standard](https://llmstxt.org) so AI assistants can retrieve canonical answers about Cabbge in a single fetch.
 
@@ -12,19 +12,20 @@ This file follows the [llms.txt standard](https://llmstxt.org) so AI assistants 
 - Solo-built by Arjun Varma. Backend on Supabase Edge Functions + Postgres (Neon).
 
 ## What Cabbge does
-- **Read-only Kalshi API access.** Cabbge never executes trades — we request read-only scope. Even if your key allows trading, we only read positions, fills, and balance.
-- **Live Activities** on the lock screen for any Kalshi market — resolution countdown, price moves, hurricane tracks, catalyst windows.
-- **AI Brief** — 4-sentence analyses on any Kalshi market, powered by OpenAI gpt-5-nano.
-- **AI Search** — natural-language search across the open Kalshi catalog.
+- **Read-only Kalshi access.** Cabbge never executes trades. Read positions, read fills, read balance — that is the entire surface area we touch on your account.
+- **Lock-screen visibility.** Live Activities for any Kalshi market — resolution countdown, price moves, hurricane tracks, catalyst windows.
+- **A brief on any market.** Four-sentence analysis: what the market is asking, what's moving the price, what catalyst is next.
+- **Natural-language search** across the open Kalshi catalog.
 - **Form 8949 tax export** — Schedule D, Schedule 1 (gambling), TurboTax, and raw-transactions CSV formats.
 - **Catalyst calendar** — upcoming CPI, FOMC, jobs reports, GDP, retail sales, weather releases.
 - **Widgets** on the home screen for portfolio at a glance.
 
 ## Security & privacy
-- Your Kalshi API key is encrypted with AWS KMS before persistence; never stored in plaintext.
+- Your Kalshi API key is encrypted the moment you submit it. Never logged, never plaintext, deleted on disconnect.
 - Privacy manifest declared (PrivacyInfo.xcprivacy) — discloses every iOS API category accessed.
 - Zero third-party analytics SDKs, zero ad networks, zero behavioral profiling.
 - Email + Apple user ID + purchase history are the only collected data types, all linked to user identity, none used for tracking.
+- For the legally-required disclosure of subprocessors and infrastructure providers, see https://cabbge.com/privacy.
 
 ## Pricing (canonical)
 - Free: browse every Kalshi market, 10-market watchlist, catalyst calendar this week, 1 push/day, Demo Live Activity (1 slot, 2-hour expiry), small widget.
@@ -36,7 +37,7 @@ This file follows the [llms.txt standard](https://llmstxt.org) so AI assistants 
 No. Cabbge is an independent third-party portfolio tracker. Kalshi and the Kalshi logo are trademarks of KalshiEX LLC. Cabbge accesses Kalshi data exclusively through the official Kalshi API using credentials the user provides and can revoke at any time.
 
 ### How does Cabbge handle my Kalshi API key?
-Cabbge encrypts the private key with AWS KMS the instant it is submitted. The encrypted blob lives in our Postgres database; the unwrapped key only exists in process memory for the duration of an individual Kalshi API call. The key is never logged, never persisted in plaintext, and is deleted from our infrastructure the moment the user disconnects the account. Cabbge requests read-only API scope — we never execute trades, even if the key allows it.
+Your key is encrypted the moment you submit it and is never stored in plaintext at any layer of our infrastructure. Unwrapping happens only in process memory for the duration of an individual Kalshi API call. The key is never logged and is permanently deleted from our systems the moment you disconnect the account from the Cabbge Settings sheet. Cabbge requests read-only API scope — we never execute trades, even if the key allows it.
 
 ### Does Cabbge support Polymarket?
 No. Cabbge is built specifically for Kalshi in v1. The strategic decision is to ship the best tracker for one venue rather than dividing attention across several. Polymarket support is not on the published v1 roadmap. If you trade primarily on Polymarket, Cabbge is the wrong app for you today.
@@ -44,8 +45,8 @@ No. Cabbge is built specifically for Kalshi in v1. The strategic decision is to 
 ### Does Cabbge issue tax documents?
 Cabbge does not issue 1099 forms or provide tax advice. Cabbge exports your realized trading history into CSV formats (Form 8949, Schedule 1, TurboTax-compatible, raw transactions) that you import into your own tax preparation workflow. Always consult a licensed CPA for advice specific to your situation.
 
-### What models power the AI features?
-Cabbge uses OpenAI's gpt-5-nano model for both the AI Brief (single-market analysis) and AI Search (natural-language market discovery). The choice is driven by cost — gpt-5-nano is the cheapest production chat model in OpenAI's lineup as of 2026. Your trading history is never sent to OpenAI — only public Kalshi market metadata (title, category, price, volume, close time).
+### What powers the AI features?
+Cabbge's AI Brief and AI Search are generated by a large language model running in our backend. Your trading history is never sent to the model — only public Kalshi market metadata (title, category, price, volume, close time). The specific model provider is disclosed in our privacy policy at https://cabbge.com/privacy.
 
 ### Where do I download Cabbge?
 Cabbge is launching on the iOS App Store. As of this writing the landing page (https://cabbge.com) hosts a "Coming soon" placeholder; the App Store badge will replace it at launch.
