@@ -43,7 +43,14 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large", "max-snippet": -1 },
   },
-  icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
+  icons: {
+    icon: [
+      { url: "/icon-1024.png", sizes: "1024x1024", type: "image/png" },
+      { url: "/logo.png", sizes: "any", type: "image/png" },
+    ],
+    apple: [{ url: "/icon-1024.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/logo.png",
+  },
 };
 
 export const viewport: Viewport = {
