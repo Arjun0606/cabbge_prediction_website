@@ -35,7 +35,7 @@ export default function LandingClient({ markets, exchangeStatus }: LandingClient
       <PhoneGallery />
       <MascotMoment />
       <TodayOnKalshi markets={markets} />
-      <LiveActivityShowcase />
+      <LiveActivityShowcase markets={markets} />
       <FeatureBento />
       <Pricing />
       <BlogTeaser />
@@ -133,23 +133,25 @@ function Nav({ exchangeStatus }: { exchangeStatus: KalshiExchangeStatus }) {
 }
 
 function Logo() {
+  // Mascot is visually heavier than the wordmark — size it down to
+  // match the optical weight of bold-700 text. Wordmark gets +1
+  // tracking step and a beefier weight so the lockup reads as one
+  // unit rather than icon+label.
   return (
     <a
       href="/"
       aria-label="Cabbge — home"
-      className="flex items-center gap-2.5 group rounded-md focus-visible:ring-2 focus-visible:ring-[var(--color-cabbge-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+      className="flex items-center gap-2 group rounded-md focus-visible:ring-2 focus-visible:ring-[var(--color-cabbge-accent)] focus-visible:ring-offset-4 focus-visible:ring-offset-black"
     >
-      <div className="relative w-9 h-9">
-        <Image
-          src="/logo.png"
-          alt=""
-          width={36}
-          height={36}
-          priority
-          className="drop-shadow-[0_0_20px_rgba(0,214,50,0.35)] group-hover:drop-shadow-[0_0_28px_rgba(0,214,50,0.55)] transition-all"
-        />
-      </div>
-      <span className="font-bold tracking-tight text-white text-lg">cabbge</span>
+      <Image
+        src="/logo.png"
+        alt=""
+        width={26}
+        height={26}
+        priority
+        className="drop-shadow-[0_0_14px_rgba(0,214,50,0.4)] group-hover:drop-shadow-[0_0_20px_rgba(0,214,50,0.6)] transition-all"
+      />
+      <span className="font-extrabold tracking-tight text-white text-[17px] leading-none">cabbge</span>
     </a>
   );
 }
@@ -652,6 +654,70 @@ function TodayOnKalshi({ markets }: { markets: KalshiMarket[] }) {
 // PHONE MOCKUP — wraps a real iOS screenshot in a phone bezel
 // =============================================================================
 
+/// HTML in-bezel mock of the iOS Portfolio empty state. Replaces the
+/// static portfolio.png screenshot which captured the pre-strip copy
+/// ("Connect Kalshi or Polymarket"). HTML means the marketing site
+/// stays in sync with iOS without re-shooting screenshots after every
+/// copy change.
+function PhoneMockupPortfolioEmpty({ scale = 1 }: { scale?: number }) {
+  return (
+    <div className="relative" style={{ width: `${300 * scale}px`, height: `${620 * scale}px` }}>
+      <div className="absolute inset-0 -m-8 rounded-[60px] bg-[radial-gradient(circle_at_center,_var(--color-cabbge-accent)_0%,_transparent_55%)] opacity-30 blur-2xl" />
+      <div className="relative w-full h-full rounded-[55px] bg-gradient-to-b from-[#2a2a2a] to-[#0a0a0a] p-[2px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
+        <div className="w-full h-full rounded-[53px] bg-[#0a0a0a] overflow-hidden relative">
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[110px] h-[34px] bg-black rounded-full z-20" />
+          <div className="absolute top-4 left-7 text-white text-sm font-semibold z-10">9:41</div>
+          <div className="absolute top-4 right-7 z-10 text-white text-xs">●●●</div>
+
+          {/* Tiny header with cabbge wordmark — matches iOS Portfolio */}
+          <div className="absolute top-14 left-0 right-0 flex items-center justify-center gap-1.5 z-10">
+            <Image src="/logo.png" alt="" width={18} height={18} />
+            <span className="text-white text-[13px] font-semibold tracking-tight">cabbge</span>
+          </div>
+
+          {/* Centered empty-state hero */}
+          <div className="absolute inset-x-0 top-0 bottom-20 flex flex-col items-center justify-center px-6">
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="relative"
+            >
+              <div className="absolute inset-0 -m-4 rounded-full bg-[radial-gradient(circle_at_center,_var(--color-semantic-up)_0%,_transparent_60%)] opacity-30 blur-xl" />
+              <Image src="/logo.png" alt="" width={92} height={92} className="relative" />
+            </motion.div>
+            <h3 className="text-white text-lg font-semibold mt-6 text-center">Track your positions live</h3>
+            <p className="text-white/60 text-[13px] mt-2 text-center leading-snug max-w-[220px]">
+              Connect your Kalshi account to see your portfolio live. Or just explore — every Kalshi market is free to browse.
+            </p>
+            <button className="mt-6 w-full max-w-[240px] py-3 rounded-full bg-white text-black text-[14px] font-semibold">
+              Connect Account
+            </button>
+            <button className="mt-3 text-[var(--color-semantic-up)] text-[12px] font-medium">
+              Or browse without an account →
+            </button>
+          </div>
+
+          {/* Tab bar */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] h-14 rounded-full bg-black/80 backdrop-blur-xl border border-white/[0.06] flex items-center justify-around px-2 z-10">
+            {[
+              { l: "Portfolio", a: true },
+              { l: "Markets", a: false },
+              { l: "Catalysts", a: false },
+              { l: "Perf.", a: false },
+              { l: "Settings", a: false },
+            ].map((t) => (
+              <div key={t.l} className="flex flex-col items-center gap-0.5">
+                <div className={`w-5 h-5 rounded ${t.a ? "bg-[var(--color-semantic-up)]/20" : "bg-white/[0.04]"}`} />
+                <span className={`text-[8px] ${t.a ? "text-[var(--color-semantic-up)]" : "text-white/40"}`}>{t.l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PhoneMockupScreenshot({ src, alt, scale = 1 }: { src: string; alt: string; scale?: number }) {
   return (
     <div
@@ -722,7 +788,7 @@ function PhoneGallery() {
             whileHover={{ y: 10, scale: 1.02 }}
             className="absolute -translate-x-[55%] z-10"
           >
-            <PhoneMockupScreenshot src="/screenshots/portfolio.png" alt="Portfolio tab — the cabbge mascot greets Explorer users" scale={0.85} />
+            <PhoneMockupPortfolioEmpty scale={0.85} />
           </motion.div>
 
           {/* Center phone — Catalysts (real screenshot) */}
@@ -874,7 +940,7 @@ function PhoneMockupAIBrief({ scale = 1 }: { scale?: number }) {
 // (still the rotating mock, since lock-screen LAs aren't in the static iOS shots)
 // =============================================================================
 
-function LiveActivityShowcase() {
+function LiveActivityShowcase({ markets }: { markets: KalshiMarket[] }) {
   return (
     <section className="relative py-32 px-6">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
@@ -912,26 +978,29 @@ function LiveActivityShowcase() {
           </motion.p>
         </div>
         <div className="flex justify-center">
-          <LockScreenMockup />
+          <LockScreenMockup markets={markets} />
         </div>
       </div>
     </section>
   );
 }
 
-function LockScreenMockup() {
+function LockScreenMockup({ markets }: { markets: KalshiMarket[] }) {
+  // Real Kalshi markets rotating through the lock-screen preview — no
+  // fake/mock data. We rotate through the top-4 by 24h volume so the
+  // preview reads as a live tape of actual prediction-market activity.
+  const sources = markets.slice(0, 4);
   const [idx, setIdx] = useState(0);
-  const activities = [
-    { kind: "resolution", title: "Will SCOTUS rule for Trump?", price: 73, change: +4.5 },
-    { kind: "catalyst", title: "CPI release — May print", subtitle: "in 1h 23m", impact: "high" },
-    { kind: "weather", title: "Hurricane Janet → Miami", subtitle: "75% strike probability" },
-    { kind: "position", title: "Patriots win SB LX", pnl: +234.5 },
-  ] as const;
   useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % activities.length), 3500);
+    if (sources.length === 0) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % sources.length), 3500);
     return () => clearInterval(t);
-  }, []);
-  const a = activities[idx];
+  }, [sources.length]);
+
+  // Fallback: if upstream returned nothing, hide the lock-screen card.
+  // The phone bezel still renders (status bar + clock) — degraded clean.
+  const m = sources[idx];
+  const price = m ? (displayPriceCents(m) ?? 50) : null;
 
   return (
     <div className="relative w-[300px] h-[620px]">
@@ -950,55 +1019,35 @@ function LockScreenMockup() {
             <div className="text-white/80 text-sm font-medium">Wednesday, May 17</div>
             <div className="text-white text-[88px] leading-none font-light tracking-tight mt-1">9:41</div>
           </div>
-          <div className="absolute bottom-32 left-4 right-4">
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 16, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[20px] bg-white/[0.08] backdrop-blur-2xl border border-white/10 p-4"
-            >
-              <div className="flex items-center gap-2 mb-2.5">
-                <Image src="/logo.png" alt="" width={20} height={20} className="rounded-md" />
-                <span className="text-white/80 text-[11px] font-semibold tracking-wide uppercase">
-                  Cabbge · {a.kind}
-                </span>
-              </div>
-              {a.kind === "resolution" && (
+          {/* Live Activity card — REAL Kalshi market, rotating. Hidden
+              when upstream returned no markets (degraded clean). */}
+          {m && price !== null && (
+            <div className="absolute bottom-32 left-4 right-4">
+              <motion.div
+                key={`${m.ticker}-${idx}`}
+                initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="rounded-[20px] bg-white/[0.08] backdrop-blur-2xl border border-white/10 p-4"
+              >
+                <div className="flex items-center gap-2 mb-2.5">
+                  <Image src="/logo.png" alt="" width={20} height={20} className="rounded-md" />
+                  <span className="text-white/80 text-[11px] font-semibold tracking-wide uppercase">
+                    Cabbge · {m.category ?? "live"}
+                  </span>
+                </div>
                 <div>
-                  <div className="text-white text-sm font-medium leading-tight mb-2">{a.title}</div>
+                  <div className="text-white text-sm font-medium leading-tight mb-2 line-clamp-2">{m.title}</div>
                   <div className="flex items-end justify-between">
-                    <div className="text-white text-3xl font-bold mono tabular-nums">{a.price}¢</div>
-                    <div className="text-[var(--color-semantic-up)] text-sm font-semibold mono tabular-nums">+{a.change}¢</div>
+                    <div className="text-white text-3xl font-bold mono tabular-nums">{price}¢</div>
+                    <div className="text-[var(--color-text-tertiary)] text-[10px] mono uppercase tracking-wide">
+                      Resolves {timeToClose(m.close_time)}
+                    </div>
                   </div>
                 </div>
-              )}
-              {a.kind === "catalyst" && (
-                <div>
-                  <div className="text-white text-sm font-medium mb-1">{a.title}</div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-white/70 mono tabular-nums">{a.subtitle}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-[var(--color-semantic-up)]/20 text-[var(--color-semantic-up)] text-[10px] uppercase tracking-wide font-bold">{a.impact}</span>
-                  </div>
-                </div>
-              )}
-              {a.kind === "weather" && (
-                <div>
-                  <div className="text-white text-sm font-medium mb-1">{a.title}</div>
-                  <div className="text-white/70 text-xs mono">{a.subtitle}</div>
-                </div>
-              )}
-              {a.kind === "position" && (
-                <div>
-                  <div className="text-white text-sm font-medium mb-1">{a.title}</div>
-                  <div className="flex items-end justify-between">
-                    <div className="text-[var(--color-semantic-up)] text-2xl font-bold mono tabular-nums">+${a.pnl?.toFixed(2)}</div>
-                    <div className="text-white/60 text-[10px] uppercase tracking-wide">open</div>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </div>
+              </motion.div>
+            </div>
+          )}
           <div className="absolute bottom-8 left-0 right-0 flex justify-between px-12">
             <div className="w-11 h-11 rounded-full bg-white/15 backdrop-blur-md" />
             <div className="w-11 h-11 rounded-full bg-white/15 backdrop-blur-md" />
@@ -1267,74 +1316,259 @@ function TrackerVisual() {
 // PRICING
 // =============================================================================
 
+// =============================================================================
+// PRICING — Gumroad-energy big number + Stripe-style feature comparison.
+//
+// Structure:
+//   1. Massive $19.99 hero number with side annual savings callout
+//   2. Two short cards (Free / Pro) with the FIRST 3 features each — the
+//      glanceable "what do I get" answer
+//   3. A clean comparison table below — the full feature matrix for the
+//      person who wants the detail before clicking Subscribe
+// =============================================================================
+
 function Pricing() {
   return (
     <section id="pricing" className="px-6 py-32 max-w-6xl mx-auto">
-      <motion.p initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-xs uppercase tracking-[0.25em] text-[var(--color-text-tertiary)] mb-5">
+      <motion.p
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-xs uppercase tracking-[0.25em] text-[var(--color-text-tertiary)] mb-5"
+      >
         Pricing
       </motion.p>
-      <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-4xl sm:text-6xl font-bold tracking-tight leading-[1.05] mb-16">
-        Two tiers. No tricks.
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="text-5xl sm:text-7xl font-bold tracking-[-0.03em] leading-[0.95] mb-4"
+      >
+        Free for browsers.{" "}
+        <br />
+        <span className="text-[var(--color-text-secondary)]">Cheap for traders.</span>
       </motion.h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl">
-        <PriceCard tier="Free" tagline="A real product, not a teaser." price="$0" features={[
-          "Browse every Kalshi market",
-          "10-market watchlist",
-          "Catalyst calendar (this week)",
-          "Demo Live Activity (1 slot, 2hr)",
-          "Small home-screen widget",
-          "1 resolution push per day",
-        ]} />
-        <PriceCard tier="Pro" tagline="The desk-class loadout." price="$19.99" priceSub="per month, or $159.99/yr (save 33%)" featured features={[
-          "AI brief on every market — unlimited",
-          "AI-native semantic search",
-          "5 daily push triggers, per-category tuning",
-          "Form 8949 + Schedule 1 + TurboTax CSV export",
-          "Hurricane + weather Live Activities",
-          "Up to 5 concurrent Live Activities (12hr each)",
-          "All widgets, all advanced analytics",
-          "Multi-account portfolio aggregation",
-        ]} />
+      <p className="text-[var(--color-text-secondary)] text-lg max-w-xl mb-16">
+        No free trial — the free tier IS the trial, and it's a real product.
+      </p>
+
+      {/* Hero price block — the Gumroad/Robinhood move */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="relative overflow-hidden rounded-3xl border border-[var(--color-cabbge-accent)]/30 bg-gradient-to-br from-[var(--color-cabbge-accent)]/[0.10] via-white/[0.02] to-transparent p-10 sm:p-14 mb-12"
+      >
+        <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-[var(--color-cabbge-accent)] opacity-[0.10] blur-3xl" />
+        <div className="relative grid lg:grid-cols-[1.3fr_1fr] gap-10 items-end">
+          <div>
+            <div className="text-xs uppercase tracking-[0.25em] text-[var(--color-cabbge-accent)] mb-4 font-semibold">
+              Cabbge Pro
+            </div>
+            <div className="flex items-baseline gap-3 mb-4 flex-wrap">
+              <span className="text-7xl sm:text-[8rem] font-bold tracking-[-0.06em] leading-none mono tabular-nums">
+                $19
+              </span>
+              <span className="text-4xl sm:text-5xl font-bold tracking-tight mono tabular-nums text-[var(--color-text-secondary)]">
+                .99
+              </span>
+              <span className="text-[var(--color-text-tertiary)] text-base ml-1">/ month</span>
+            </div>
+            <p className="text-[var(--color-text-secondary)] text-base max-w-md leading-snug">
+              Unlimited briefs. Unlimited Live Activities. Tax export. Every push trigger. Every widget.
+            </p>
+          </div>
+          <div className="rounded-2xl bg-black/40 border border-white/[0.08] p-6">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-tertiary)] mb-3">
+              Or save 33% with annual
+            </div>
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-4xl font-bold tracking-tight mono tabular-nums">$159</span>
+              <span className="text-xl font-semibold mono tabular-nums text-[var(--color-text-secondary)]">.99</span>
+              <span className="text-[var(--color-text-tertiary)] text-sm">/ year</span>
+            </div>
+            <div className="flex items-center gap-2 text-[var(--color-semantic-up)] text-sm font-semibold mono tabular-nums">
+              <span>↓</span>
+              <span>$79.89 saved vs monthly</span>
+            </div>
+            <div className="mt-4 pt-4 border-t border-white/[0.06]">
+              <div className="text-[var(--color-text-tertiary)] text-[11px] mono tabular-nums">$13.33/mo equivalent</div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Quick-glance two-up: Free vs Pro headline features */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
+        <TierGlance
+          tier="Free"
+          tagline="A real product. Not a teaser."
+          price="$0"
+          highlight={false}
+          features={[
+            "Browse every Kalshi market",
+            "Live Activity on any market (1 slot, 2 hr)",
+            "Catalyst calendar this week",
+          ]}
+        />
+        <TierGlance
+          tier="Pro"
+          tagline="The desk-class loadout."
+          price="$19.99"
+          priceUnit="/ mo"
+          highlight
+          features={[
+            "Brief on every market — unlimited",
+            "Up to 5 concurrent Live Activities (12 hr)",
+            "Form 8949 export every January",
+          ]}
+        />
       </div>
+
+      {/* Full comparison table */}
+      <PricingComparison />
     </section>
   );
 }
 
-function PriceCard({ tier, tagline, price, priceSub, features, featured }: { tier: string; tagline: string; price: string; priceSub?: string; features: string[]; featured?: boolean }) {
+function TierGlance({
+  tier, tagline, price, priceUnit, features, highlight,
+}: { tier: string; tagline: string; price: string; priceUnit?: string; features: string[]; highlight?: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      whileHover={{ y: -4 }}
-      className={`relative rounded-3xl p-8 ${
-        featured
-          ? "bg-gradient-to-b from-[var(--color-cabbge-accent)]/[0.08] via-white/[0.04] to-white/[0.02] border border-white/20"
-          : "bg-gradient-to-b from-white/[0.03] to-white/[0.01] border border-white/[0.06]"
+      transition={{ duration: 0.5 }}
+      whileHover={{ y: -3 }}
+      className={`relative rounded-3xl p-7 ${
+        highlight
+          ? "bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-white/15"
+          : "bg-white/[0.02] border border-white/[0.06]"
       }`}
     >
-      {featured && (
-        <span className="absolute -top-3 left-7 text-[10px] font-bold uppercase tracking-[0.18em] bg-[var(--color-semantic-up)] text-black px-3 py-1.5 rounded-full">
-          Most popular
-        </span>
-      )}
-      <h3 className="text-2xl font-bold mb-2">{tier}</h3>
-      <p className="text-[var(--color-text-secondary)] text-sm mb-7">{tagline}</p>
-      <div className="mb-1">
-        <span className="text-5xl font-bold tracking-tight mono tabular-nums">{price}</span>
-        {priceSub && <span className="text-[var(--color-text-tertiary)] text-sm ml-2">/mo</span>}
+      <div className="flex items-baseline justify-between mb-1">
+        <h3 className="text-xl font-bold">{tier}</h3>
+        <div className="flex items-baseline gap-1">
+          <span className="text-2xl font-bold tracking-tight mono tabular-nums">{price}</span>
+          {priceUnit && <span className="text-[var(--color-text-tertiary)] text-xs">{priceUnit}</span>}
+        </div>
       </div>
-      {priceSub && <p className="text-xs text-[var(--color-text-tertiary)] mb-7 mono tabular-nums">{priceSub}</p>}
-      <ul className="space-y-2.5 text-sm">
+      <p className="text-[var(--color-text-secondary)] text-sm mb-5">{tagline}</p>
+      <ul className="space-y-2 text-sm">
         {features.map((f) => (
           <li key={f} className="flex gap-2 text-[var(--color-text-secondary)]">
-            <span className="text-[var(--color-semantic-up)] mt-0.5">✓</span>
+            <span className="text-[var(--color-semantic-up)] mt-0.5 leading-tight">✓</span>
             <span className="leading-snug">{f}</span>
           </li>
         ))}
       </ul>
     </motion.div>
+  );
+}
+
+/// The full Free-vs-Pro comparison table. Replaces the previous
+/// duplicate feature lists — single source of truth, clean check/x
+/// columns, scrollable on mobile.
+function PricingComparison() {
+  const sections: { heading: string; rows: { label: string; free: string | boolean; pro: string | boolean }[] }[] = [
+    {
+      heading: "Markets",
+      rows: [
+        { label: "Browse every Kalshi market",        free: true,            pro: true },
+        { label: "Catalyst calendar",                  free: "This week",     pro: "Full year" },
+        { label: "Natural-language market search",     free: false,           pro: true },
+        { label: "Watchlist",                          free: "10 markets",    pro: "Unlimited" },
+      ],
+    },
+    {
+      heading: "Lock screen",
+      rows: [
+        { label: "Live Activity on any market",        free: "1 slot · 2 hr",  pro: "5 slots · 12 hr" },
+        { label: "Hurricane & weather variants",       free: false,           pro: true },
+        { label: "News-on-position variants",          free: false,           pro: true },
+        { label: "Home-screen widgets",                free: "Small",         pro: "All sizes" },
+      ],
+    },
+    {
+      heading: "AI",
+      rows: [
+        { label: "Brief on any market",                free: false,           pro: "Unlimited" },
+        { label: "Search across the open catalog",     free: false,           pro: "Unlimited" },
+      ],
+    },
+    {
+      heading: "Notifications",
+      rows: [
+        { label: "Resolution push on watchlist",       free: "1 / day",       pro: true },
+        { label: "Morning brief, pre-catalyst, news, evening", free: false,   pro: true },
+        { label: "Per-category tuning",                free: false,           pro: true },
+      ],
+    },
+    {
+      heading: "Tax",
+      rows: [
+        { label: "Form 8949 / Schedule D CSV",         free: false,           pro: true },
+        { label: "Schedule 1 (sports + political)",    free: false,           pro: true },
+        { label: "TurboTax-importable CSV",            free: false,           pro: true },
+        { label: "Estimated quarterly calculator",      free: false,           pro: true },
+      ],
+    },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6 }}
+      className="rounded-3xl border border-white/[0.06] bg-white/[0.015] overflow-hidden"
+    >
+      <div className="grid grid-cols-[1fr_auto_auto] sm:grid-cols-[1.5fr_1fr_1fr]">
+        <div className="px-6 py-5 text-[var(--color-text-tertiary)] text-[11px] uppercase tracking-[0.18em] font-semibold border-b border-white/[0.06]">
+          Compare
+        </div>
+        <div className="px-6 py-5 text-center text-[var(--color-text-secondary)] text-sm font-semibold border-b border-l border-white/[0.06]">
+          Free
+        </div>
+        <div className="px-6 py-5 text-center text-[var(--color-cabbge-accent)] text-sm font-semibold border-b border-l border-white/[0.06]">
+          Pro
+        </div>
+
+        {sections.map((section, i) => (
+          <ComparisonSection key={section.heading} section={section} isFirst={i === 0} />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function ComparisonSection({
+  section, isFirst,
+}: { section: { heading: string; rows: { label: string; free: string | boolean; pro: string | boolean }[] }; isFirst: boolean }) {
+  return (
+    <>
+      <div className={`col-span-3 px-6 py-3 text-[var(--color-text-tertiary)] text-[10px] uppercase tracking-[0.2em] font-bold bg-white/[0.02] ${!isFirst ? "border-t border-white/[0.06]" : ""}`}>
+        {section.heading}
+      </div>
+      {section.rows.map((row) => (
+        <div key={row.label} className="contents">
+          <div className="px-6 py-4 text-white text-[14px] border-t border-white/[0.04]">{row.label}</div>
+          <div className="px-6 py-4 text-center border-t border-l border-white/[0.04] flex items-center justify-center text-[var(--color-text-secondary)] text-[13px]">
+            {row.free === true ? <span className="text-[var(--color-semantic-up)] text-lg leading-none">✓</span>
+             : row.free === false ? <span className="text-white/15 text-lg leading-none">—</span>
+             : <span className="mono tabular-nums text-[12px]">{row.free}</span>}
+          </div>
+          <div className="px-6 py-4 text-center border-t border-l border-white/[0.04] flex items-center justify-center text-white text-[13px]">
+            {row.pro === true ? <span className="text-[var(--color-semantic-up)] text-lg leading-none font-bold">✓</span>
+             : row.pro === false ? <span className="text-white/15 text-lg leading-none">—</span>
+             : <span className="mono tabular-nums text-[12px] font-semibold">{row.pro}</span>}
+          </div>
+        </div>
+      ))}
+    </>
   );
 }
 
