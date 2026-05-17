@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const SITE = "https://cabbge.com";
-const TITLE = "Cabbge — Kalshi & Polymarket on your lock screen";
+const TITLE = "Cabbge — your Kalshi co-pilot, on your lock screen";
 const DESCRIPTION =
-  "Track your Kalshi and Polymarket positions live. AI briefs on every market, Form 8949 tax exports in two taps, Live Activities + widgets, multi-venue portfolio in one app. iOS, $19.99/mo.";
+  "The iOS tracker built only for Kalshi. Live positions on your lock screen, AI brief on every market, Form 8949 tax export in two taps, read-only by design. $19.99/mo.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   creator: "Arjun Varma",
   publisher: "Cabbge",
   keywords: [
-    "Kalshi tracker", "Polymarket tracker", "prediction market app",
-    "event contracts", "Kalshi portfolio", "Kalshi tax export", "Form 8949 Kalshi",
-    "political betting tracker", "Kalshi iOS app", "Kalshi Live Activity",
-    "Polymarket iOS", "prediction market portfolio", "Kalshi AI brief",
+    "Kalshi tracker", "Kalshi iOS app", "Kalshi portfolio tracker",
+    "Kalshi tax export", "Form 8949 Kalshi", "Kalshi Live Activity",
+    "Kalshi widget", "Kalshi AI brief", "Kalshi notifications",
+    "Kalshi mobile", "prediction market tracker iPhone", "event contracts iOS",
   ],
   category: "finance",
   alternates: { canonical: SITE },
@@ -117,9 +117,9 @@ const STRUCTURED_DATA = [
     },
     featureList: [
       "Live Activities on the lock screen for Kalshi positions",
-      "AI Brief on any prediction market (OpenAI gpt-5-nano)",
+      "AI Brief on any Kalshi market (OpenAI gpt-5-nano)",
       "Form 8949, Schedule 1, TurboTax CSV tax exports",
-      "Multi-venue portfolio (Kalshi + Polymarket-US)",
+      "Read-only Kalshi access — never executes trades",
       "AWS KMS-encrypted API keys",
       "Five daily push triggers (morning brief, pre-catalyst, resolution, news-on-position, evening digest)",
       "AI-native semantic market search",

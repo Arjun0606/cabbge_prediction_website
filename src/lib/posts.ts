@@ -56,7 +56,7 @@ export const POSTS: Post[] = [
       },
       {
         q: "Does Cabbge work with Polymarket?",
-        a: "Yes. Cabbge supports Polymarket-US (the CFTC-regulated US offering) alongside Kalshi as a multi-venue tracker. Both venues sync into a single portfolio, single tax export, and single daily digest. Polymarket-international (Polygon-chain) is not currently supported due to its non-US regulatory status.",
+        a: "No. Cabbge is built specifically for Kalshi. Polymarket support is not on the v1 roadmap. The product strategy is to be the best tracker for one venue rather than a mediocre tracker for several — Kalshi's deeper economic-indicator and weather liquidity is the v1 focus.",
       },
     ],
     body: [
@@ -157,16 +157,16 @@ export const POSTS: Post[] = [
   // -----------------------------------------------------------------
   {
     slug: "polymarket-vs-kalshi-2026",
-    title: "Polymarket vs Kalshi: a side-by-side for 2026",
+    title: "Polymarket vs Kalshi: why Cabbge picked Kalshi (and what to know about both)",
     description:
-      "Polymarket vs Kalshi compared: regulation, fees, liquidity, market coverage, and how to track positions on both venues from one iPhone app.",
+      "Polymarket vs Kalshi compared honestly: regulation, fees, liquidity, market coverage. Why Cabbge ships Kalshi-only in v1 and what that focus buys you.",
     excerpt:
-      "Same product, different rails. A direct comparison of Polymarket-US and Kalshi for serious traders — fees, regulation, market coverage, and the one app that tracks both.",
+      "Both CFTC-regulated, both legal in the US, both growing fast. Here's the honest comparison — and why we built Cabbge for Kalshi rather than splitting attention across both.",
     category: "Compare",
     publishedAt: "2026-05-17",
     readingMinutes: 8,
     author: AUTHOR,
-    keywords: ["Polymarket vs Kalshi", "prediction market comparison", "Polymarket US", "Kalshi alternatives", "event contracts"],
+    keywords: ["Polymarket vs Kalshi", "prediction market comparison", "Polymarket US", "Kalshi alternatives", "event contracts", "Kalshi tracker focus"],
     faqs: [
       {
         q: "Is Polymarket legal in the US?",
@@ -177,8 +177,8 @@ export const POSTS: Post[] = [
         a: "It depends on the market category. Polymarket has historically dominated political and crypto markets in raw notional volume. Kalshi has stronger liquidity in economic indicator markets (CPI, FOMC, jobs reports), weather/hurricane markets, and increasingly sports. For traders who size meaningful positions, check the orderbook depth on the specific market — not the venue-level aggregate.",
       },
       {
-        q: "Can I track both Polymarket and Kalshi in one app?",
-        a: "Yes. Cabbge is the multi-venue tracker that aggregates Kalshi and Polymarket-US positions into a single portfolio, single P&L, single tax export. You connect your Kalshi API key and your Polymarket-US (QCEX) API credentials separately; the iOS app then renders both venues' positions in one view.",
+        q: "Does Cabbge support Polymarket?",
+        a: "No. Cabbge is built specifically for Kalshi in v1. The product decision is to ship the best tracker for one venue rather than a divided-attention tracker for several. Kalshi's deeper liquidity in economic-indicator, weather, and increasingly sports markets is the v1 focus. Multi-venue is not on the published roadmap.",
       },
       {
         q: "What are the fees on Polymarket vs Kalshi?",
@@ -201,17 +201,17 @@ export const POSTS: Post[] = [
         ],
       },
       {
-        heading: "Tracking both Polymarket and Kalshi from one iPhone app",
+        heading: "Why Cabbge ships Kalshi-only in v1 — focus beats coverage",
         paragraphs: [
-          "Cabbge is a multi-venue tracker built for traders who run positions on both Polymarket-US and Kalshi simultaneously. You connect your Kalshi API key pair (access key ID plus RSA private key PEM) and your Polymarket-US triple credential (API key, secret, passphrase) through two separate Settings sheets. Both credentials are encrypted with AWS KMS envelope encryption — using the same KMS key Cabbge uses for all user secrets — and stored in our Postgres database as wrapped blobs.",
-          "The Portfolio tab then renders both venues' positions in a single unified view. Total equity, cash, and realized P&L aggregate across venues. Our Catalyst calendar shows upcoming events relevant to both. The AI Brief feature works on any market from either venue. The tax export ingests fills from both venues into a single FIFO realization run, producing one Form 8949 CSV covering your full trading history — meaning your CPA sees one document, not two, even if you split $50,000 in annual volume 60/40 across the venues.",
+          "Cabbge is built specifically for Kalshi. We are not a multi-venue tracker in v1. The product decision is deliberate: a great tracker for one venue beats a divided-attention tracker for several, especially when one solo founder is building it. Kalshi's deeper liquidity in economic indicators, weather, and (increasingly) sports is the cohort we serve. The Live Activity surfaces tune to Kalshi's exact ticker convention. The Form 8949 tax export classifies markets using Kalshi's category field. The 5 daily push triggers wire into Kalshi's API webhooks. None of that translates cleanly to a multi-venue abstraction without losing fidelity on each side.",
+          "What focus buys you: a Cabbge user who trades 200 Kalshi markets per year gets an integrated experience — lock-screen P&L on positions that matter, AI brief that knows Kalshi's market categories, tax export your CPA recognizes. A multi-venue tracker would render this as the lowest-common-denominator UI both venues share. The PRD lock for v1 is Kalshi-first; Polymarket-US support is not on the published roadmap. If you trade primarily on Polymarket, Cabbge is the wrong app for you today — and we'd rather tell you that upfront than ship a half-built integration.",
         ],
       },
       {
         heading: "How to choose between Polymarket and Kalshi for a specific market",
         paragraphs: [
-          "For any given market available on both venues, compare three things using Cabbge's side-by-side view in the AI Search results. First: orderbook depth at your intended size. For a $500 position, you want at least $2,500 of size resting within 2 cents of the inside market. Second: current best bid-ask spread. A 1-2 cent spread is healthy; 5+ cent spreads imply you'll pay 1-2% in transaction cost just to enter. Third: the fee schedule for the specific category, which both venues update quarterly.",
-          "For a typical $500 position on a political market in 2026, Polymarket-US is usually 30-40% tighter on spread. For a $500 position on the next FOMC decision, Kalshi is typically 50-60% deeper in orderbook size at the inside market. Both venues are growing 15-20% quarter-over-quarter, so these numbers will shift. The multi-venue advantage compounds — you route to whichever venue is tighter at the moment of execution, not pre-commit to a single platform.",
+          "For any given market available on both venues, compare three things in the venues' own apps before sizing in. First: orderbook depth at your intended size. For a $500 position, you want at least $2,500 of size resting within 2 cents of the inside market. Second: current best bid-ask spread. A 1-2 cent spread is healthy; 5+ cent spreads imply you'll pay 1-2% in transaction cost just to enter. Third: the fee schedule for the specific category, which both venues update quarterly.",
+          "For a typical $500 position on a political market in 2026, Polymarket-US is usually 30-40% tighter on spread. For a $500 position on the next FOMC decision, Kalshi is typically 50-60% deeper in orderbook size at the inside market. Both venues are growing 15-20% quarter-over-quarter, so these numbers will shift. If your trading volume splits roughly even across both, you'll likely live in both apps. If your trading concentrates in macro / weather / sports — the Kalshi side of the venn diagram — Cabbge becomes a single-app workflow.",
         ],
       },
     ],

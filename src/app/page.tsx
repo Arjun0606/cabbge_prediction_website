@@ -179,7 +179,7 @@ function Hero() {
             transition={{ duration: 0.6, delay: 0.05 }}
             className="text-xs uppercase tracking-[0.25em] text-[var(--color-text-tertiary)] mb-6"
           >
-            iOS · Kalshi · Polymarket
+            iOS · built only for Kalshi
           </motion.p>
 
           <WordReveal
@@ -193,9 +193,9 @@ function Hero() {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="mt-10 text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-xl leading-relaxed"
           >
-            Track Kalshi and Polymarket positions live. AI briefs on every market.
-            Form&nbsp;8949 tax exports in two taps. Lock-screen Live Activities so
-            you never miss a resolution.
+            Track your Kalshi positions live. AI briefs on every market.
+            Form&nbsp;8949 tax exports in two taps. Lock-screen Live Activities
+            so you never miss a resolution.
           </motion.p>
 
           <motion.div
@@ -499,15 +499,10 @@ function PhoneMockupScreenshot({ src, alt, scale = 1 }: { src: string; alt: stri
 // =============================================================================
 
 function PhoneGallery() {
-  // Three visually-distinct screens: Portfolio (cabbage mascot hero
-  // empty state), Catalysts (macro calendar list), Performance (empty
-  // state with equity-curve placeholder + stats grid). Each is its own
-  // visual personality so the triptych reads as variety, not repetition.
-  const phones = [
-    { src: "/screenshots/portfolio.png",   alt: "Portfolio tab — the cabbge mascot greets Explorer users with 'Track your positions live' and a Connect Account CTA", rotate: -8, y: 30 },
-    { src: "/screenshots/catalysts.png",   alt: "Catalysts tab — calendar of upcoming macro releases (Jobs, CPI, Retail, Fed, PCE, GDP) with consensus and prior values",      rotate:  0, y:  0 },
-    { src: "/screenshots/performance.png", alt: "Performance tab — All-Time P&L hero, equity curve, and the stats grid (win rate, wins/losses, realized/unrealized, slippage, hold)", rotate:  8, y: 30 },
-  ];
+  // Three distinct phones: Portfolio (real screenshot, cabbage hero
+  // empty state), Catalysts (real screenshot, macro calendar list),
+  // AI Brief (HTML mockup with typed-out animation — distinctive
+  // motion + showcases a paid feature).
   return (
     <section className="relative py-32 px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto">
@@ -527,32 +522,167 @@ function PhoneGallery() {
           className="text-4xl sm:text-6xl font-bold tracking-tight text-center leading-[1.05] mb-6 max-w-4xl mx-auto"
         >
           Built for the way{" "}
-          <span className="text-[var(--color-text-secondary)]">prediction-market traders actually work.</span>
+          <span className="text-[var(--color-text-secondary)]">Kalshi traders actually work.</span>
         </motion.h2>
         <p className="text-[var(--color-text-secondary)] text-center max-w-2xl mx-auto mb-20 leading-relaxed">
           Three taps from launch to the price you care about. Five from sign-in to a Form&nbsp;8949 CSV.
         </p>
 
         <div className="relative h-[640px] flex items-center justify-center">
-          {phones.map((p, i) => (
-            <motion.div
-              key={p.src}
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: p.y }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.9, delay: 0.1 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              style={{ transform: `rotate(${p.rotate}deg)` }}
-              whileHover={{ y: p.y - 20, scale: 1.02 }}
-              className={`absolute ${
-                i === 0 ? "-translate-x-[55%]" : i === 2 ? "translate-x-[55%]" : ""
-              } z-${i === 1 ? "20" : "10"}`}
-            >
-              <PhoneMockupScreenshot src={p.src} alt={p.alt} scale={0.85} />
-            </motion.div>
-          ))}
+          {/* Left phone — Portfolio */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 30 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transform: "rotate(-8deg)" }}
+            whileHover={{ y: 10, scale: 1.02 }}
+            className="absolute -translate-x-[55%] z-10"
+          >
+            <PhoneMockupScreenshot src="/screenshots/portfolio.png" alt="Portfolio tab — the cabbge mascot greets Explorer users" scale={0.85} />
+          </motion.div>
+
+          {/* Center phone — Catalysts (real screenshot) */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -20, scale: 1.02 }}
+            className="absolute z-20"
+          >
+            <PhoneMockupScreenshot src="/screenshots/catalysts.png" alt="Catalysts tab — calendar of macro releases (Jobs, CPI, Retail, Fed, PCE, GDP)" scale={0.85} />
+          </motion.div>
+
+          {/* Right phone — AI Brief (HTML mockup with typed-out animation) */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 30 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transform: "rotate(8deg)" }}
+            whileHover={{ y: 10, scale: 1.02 }}
+            className="absolute translate-x-[55%] z-10"
+          >
+            <PhoneMockupAIBrief scale={0.85} />
+          </motion.div>
         </div>
       </div>
     </section>
+  );
+}
+
+/** AI Brief screen — HTML mockup with brief text that types itself out
+ *  every time the phone scrolls into view. Looks alive. */
+function PhoneMockupAIBrief({ scale = 1 }: { scale?: number }) {
+  const reduced = useReducedMotion();
+  const fullBrief =
+    "The market is asking if the Fed will cut the funds rate by 25bps at the June 18 FOMC. Current 47¢ reflects mixed signals from May CPI (0.21% MoM vs 0.30% consensus). A softer NFP on June 6 would price this up sharply.";
+  const [text, setText] = useState(reduced ? fullBrief : "");
+
+  useEffect(() => {
+    if (reduced) return;
+    let i = 0;
+    const interval = setInterval(() => {
+      i += 2;
+      if (i >= fullBrief.length) {
+        setText(fullBrief);
+        clearInterval(interval);
+      } else {
+        setText(fullBrief.slice(0, i));
+      }
+    }, 25);
+    return () => clearInterval(interval);
+  }, [reduced]);
+
+  return (
+    <div
+      className="relative"
+      style={{ width: `${300 * scale}px`, height: `${620 * scale}px` }}
+    >
+      <div className="absolute inset-0 -m-8 rounded-[60px] bg-[radial-gradient(circle_at_center,_var(--color-cabbge-accent)_0%,_transparent_55%)] opacity-30 blur-2xl" />
+      <div className="relative w-full h-full rounded-[55px] bg-gradient-to-b from-[#2a2a2a] to-[#0a0a0a] p-[2px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
+        <div className="w-full h-full rounded-[53px] bg-[#0a0a0a] overflow-hidden relative">
+          {/* Dynamic Island */}
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[110px] h-[34px] bg-black rounded-full z-20" />
+          <div className="absolute top-4 left-7 text-white text-sm font-semibold z-10">9:41</div>
+          <div className="absolute top-4 right-7 z-10 text-white text-xs">●●●</div>
+
+          {/* Header */}
+          <div className="pt-16 px-5 pb-3 flex items-center justify-between">
+            <span className="text-white/60 text-base">←</span>
+            <span className="text-white text-base font-semibold">AI Brief</span>
+            <span className="text-[var(--color-cabbge-accent)] text-sm">✦</span>
+          </div>
+
+          {/* Market chip */}
+          <div className="px-5 mb-4">
+            <div className="rounded-xl bg-white/[0.04] border border-white/[0.06] p-3">
+              <div className="text-white text-[13px] font-medium leading-tight mb-1.5">
+                Fed cuts 25bps in June
+              </div>
+              <div className="flex items-end justify-between">
+                <span className="text-white text-xl font-bold mono tabular-nums">47¢</span>
+                <span className="text-[var(--color-semantic-down)] text-[10px] mono tabular-nums">−2¢ today</span>
+              </div>
+            </div>
+          </div>
+
+          {/* AI ANALYSIS section header */}
+          <div className="px-5 mb-2 flex items-center justify-between">
+            <span className="text-[var(--color-cabbge-accent)] text-[10px] font-bold uppercase tracking-wider">AI Analysis</span>
+            <span className="text-white/30 text-[9px] mono">gpt-5-nano</span>
+          </div>
+
+          {/* The typed-out brief */}
+          <div className="px-5 mb-5">
+            <div className="rounded-xl bg-white/[0.02] border border-white/[0.05] p-3 min-h-[140px]">
+              <p className="text-white/85 text-[11px] leading-[1.55]">
+                {text}
+                {!reduced && text.length < fullBrief.length && (
+                  <motion.span
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 0.8, repeat: Infinity }}
+                    className="inline-block w-[1px] h-[12px] bg-[var(--color-cabbge-accent)] ml-0.5 align-middle"
+                  />
+                )}
+              </p>
+            </div>
+          </div>
+
+          {/* Catalysts */}
+          <div className="px-5">
+            <div className="text-white/40 text-[10px] font-bold uppercase tracking-wider mb-2">Next catalysts</div>
+            <div className="flex flex-wrap gap-1.5">
+              {["CPI · Jun 11", "FOMC · Jun 18", "Fed Speak"].map((c) => (
+                <span key={c} className="px-2.5 py-1 rounded-full bg-white/[0.06] text-white/70 text-[10px] mono">{c}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="absolute bottom-20 left-5 right-5 text-[9px] text-white/30 leading-snug">
+            Cabbge AI presents facts, not recommendations. Trade on your own judgment.
+          </div>
+
+          {/* Tab bar */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] h-14 rounded-full bg-black/80 backdrop-blur-xl border border-white/[0.06] flex items-center justify-around px-2 z-10">
+            {[
+              { l: "Portfolio", a: false },
+              { l: "Markets", a: true },
+              { l: "Catalysts", a: false },
+              { l: "Perf.", a: false },
+              { l: "Settings", a: false },
+            ].map((t) => (
+              <div key={t.l} className="flex flex-col items-center gap-0.5">
+                <div className={`w-5 h-5 rounded ${t.a ? "bg-[var(--color-semantic-up)]/20" : "bg-white/[0.04]"}`} />
+                <span className={`text-[8px] ${t.a ? "text-[var(--color-semantic-up)]" : "text-white/40"}`}>{t.l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -715,7 +845,7 @@ function FeatureBento() {
         <BentoCard title="AI Brief" body="GPT-powered 4-sentence analysis on any prediction market — what's moving it, what's next, what serious traders miss." span="md:col-span-2" visual={<BriefVisual />} />
         <BentoCard title="Form 8949" body="One-tap CSV in TurboTax format. FIFO realized P&L, short vs long term auto-split." visual={<TaxVisual />} />
         <BentoCard title="Live Activity" body="Resolution countdowns, hurricane cones, FOMC clock — directly on your lock screen." visual={<LockVisual />} />
-        <BentoCard title="Multi-venue" body="Kalshi, Polymarket-US, Manifold — one portfolio, one P&L, one daily brief." span="md:col-span-2" visual={<VenueVisual />} />
+        <BentoCard title="Read-only by design" body="Cabbge never executes trades. We request read-only Kalshi API scope. Even if your key allows trading, we only read positions, fills, and balance — never route an order." span="md:col-span-2" visual={<ReadOnlyVisual />} />
         <BentoCard title="KMS-encrypted keys" body="Your API key is encrypted in AWS KMS before it touches our database. We never see plaintext." visual={<KeyVisual />} />
         <BentoCard title="5 daily triggers" body="Morning brief, pre-catalyst, resolution, news-on-position, evening digest. Customizable per category." visual={<NotifVisual />} />
         <BentoCard title="Zero trackers" body="No analytics SDKs. No third-party ads. No behavioral profiling. Audit our privacy manifest yourself." span="md:col-span-2" visual={<TrackerVisual />} />
@@ -803,40 +933,41 @@ function LockVisual() {
   );
 }
 
-function VenueVisual() {
-  const venues = [
-    { name: "Kalshi", color: "#00DD94" },
-    { name: "Polymarket", color: "#2A50FF" },
-    { name: "Manifold", color: "#9B59B6" },
+/** Read-only-by-design visual: the Kalshi API scopes Cabbge requests
+ *  vs the ones we explicitly never touch. Animated checks + cross. */
+function ReadOnlyVisual() {
+  const rows = [
+    { scope: "read positions", allowed: true },
+    { scope: "read fills",     allowed: true },
+    { scope: "read balance",   allowed: true },
+    { scope: "execute orders", allowed: false },
+    { scope: "withdraw funds", allowed: false },
   ];
   return (
-    <div className="rounded-xl bg-black/40 border border-white/[0.06] p-4">
-      <div className="flex items-end justify-between mb-3">
-        <span className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-wider">Total equity</span>
-        <span className="text-white mono tabular-nums font-bold">$12,847</span>
+    <div className="rounded-xl bg-black/40 border border-white/[0.06] p-4 mono">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[10px] text-[var(--color-text-tertiary)] uppercase tracking-wider">Kalshi API scope</span>
+        <span className="text-[9px] text-[var(--color-semantic-up)] uppercase tracking-wider">read-only</span>
       </div>
-      <div className="flex h-2 rounded-full overflow-hidden gap-px">
-        {[55, 30, 15].map((pct, i) => (
+      <div className="space-y-1.5">
+        {rows.map((r, i) => (
           <motion.div
-            key={i}
-            initial={{ width: 0 }}
-            whileInView={{ width: `${pct}%` }}
+            key={r.scope}
+            initial={{ opacity: 0, x: -6 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 1.0, delay: i * 0.15, ease: "easeOut" }}
-            style={{ background: venues[i].color }}
-            className="h-full"
-          />
+            transition={{ duration: 0.35, delay: i * 0.06 }}
+            className="flex items-center justify-between text-[11px]"
+          >
+            <span className={r.allowed ? "text-white/80" : "text-white/30 line-through decoration-[var(--color-semantic-down)] decoration-2"}>
+              {r.scope}
+            </span>
+            <span className={`text-[14px] leading-none ${r.allowed ? "text-[var(--color-semantic-up)]" : "text-[var(--color-semantic-down)]"}`}>
+              {r.allowed ? "✓" : "✕"}
+            </span>
+          </motion.div>
         ))}
       </div>
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        {venues.map((v) => (
-          <div key={v.name} className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: v.color }} />
-            <span className="text-[10px] text-white/60">{v.name}</span>
-          </div>
-        ))}
-      </div>
-      {/* Draw-on-scroll equity curve so this card has a moving graphic. */}
       <AnimatedEquityChart />
     </div>
   );
@@ -946,7 +1077,7 @@ function Pricing() {
       </motion.h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl">
         <PriceCard tier="Free" tagline="A real product, not a teaser." price="$0" features={[
-          "Browse every Kalshi + Polymarket market",
+          "Browse every Kalshi market",
           "10-market watchlist",
           "Catalyst calendar (this week)",
           "Demo Live Activity (1 slot, 2hr)",
@@ -1064,7 +1195,7 @@ function Footer() {
         <div className="sm:col-span-2">
           <Logo />
           <p className="mt-4 text-[var(--color-text-secondary)] max-w-md leading-relaxed">
-            Cabbge is an independent portfolio tracker for prediction markets. Not affiliated with, endorsed by, or sponsored by Kalshi or Polymarket.
+            Cabbge is an independent portfolio tracker built for Kalshi. Not affiliated with, endorsed by, or sponsored by Kalshi. Kalshi and the Kalshi logo are trademarks of KalshiEX LLC.
           </p>
         </div>
         <div>

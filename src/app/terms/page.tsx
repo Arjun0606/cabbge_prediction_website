@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Cabbge's terms of service — independent third-party tracker for prediction markets; not affiliated with Kalshi or Polymarket.",
+  description: "Cabbge's terms of service — independent third-party Kalshi tracker; not affiliated with Kalshi.",
   alternates: { canonical: "https://cabbge.com/terms" },
 };
 
@@ -19,27 +19,26 @@ export default function Terms() {
         </Section>
 
         <Section title="What Cabbge is">
-          Cabbge is an independent third-party portfolio tracker for prediction markets. It is not
-          a broker, exchange, or financial advisor. It connects to Kalshi and Polymarket-US via
-          official APIs using credentials you provide, and renders your existing positions and
-          trading history in a mobile interface.
+          Cabbge is an independent third-party portfolio tracker built for Kalshi. It is not a
+          broker, exchange, or financial advisor. It connects to Kalshi via the official Kalshi
+          API using credentials you provide, and renders your existing positions and trading
+          history in a mobile interface.
         </Section>
 
         <Section title="What Cabbge is not">
           <ul className="list-disc pl-5 space-y-2 text-[var(--color-text-secondary)]">
             <li><strong className="text-white">Not affiliated with Kalshi.</strong> Kalshi and the Kalshi logo are trademarks of KalshiEX LLC.</li>
-            <li><strong className="text-white">Not affiliated with Polymarket.</strong> Polymarket is a trademark of its owners.</li>
-            <li><strong className="text-white">Not a regulated broker or exchange.</strong> Cabbge does not place trades, hold funds, or take custody of any asset.</li>
+            <li><strong className="text-white">Not a regulated broker or exchange.</strong> Cabbge does not place trades, hold funds, or take custody of any asset. Read-only Kalshi API scope by design.</li>
             <li><strong className="text-white">Not a tax advisor.</strong> The Form 8949 and Schedule 1 exports are convenience formats. Always consult a licensed CPA.</li>
             <li><strong className="text-white">Not financial advice.</strong> The AI Brief surfaces market context and facts. It does not recommend trades.</li>
           </ul>
         </Section>
 
         <Section title="Your responsibilities">
-          You're responsible for the security of your Kalshi and Polymarket account credentials,
-          for the accuracy of tax filings you produce using Cabbge's exports, for compliance with
-          all applicable laws in your jurisdiction, and for not using Cabbge in any way that
-          violates Kalshi's or Polymarket's terms of service.
+          You're responsible for the security of your Kalshi account credentials, for the
+          accuracy of tax filings you produce using Cabbge's exports, for compliance with all
+          applicable laws in your jurisdiction, and for not using Cabbge in any way that
+          violates Kalshi's terms of service.
         </Section>
 
         <Section title="Subscription and refunds">
@@ -49,7 +48,7 @@ export default function Terms() {
         </Section>
 
         <Section title="Service availability">
-          Cabbge depends on the Kalshi API, the Polymarket-US API, Apple Push Notification service,
+          Cabbge depends on the Kalshi API, Apple Push Notification service,
           OpenAI's API, and our hosting infrastructure. When any of those have outages, parts of
           Cabbge may be unavailable. We aim for 99.5% uptime but make no guarantee.
         </Section>

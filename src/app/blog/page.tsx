@@ -4,7 +4,7 @@ import { POSTS } from "@/lib/posts";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Field notes from Cabbge — prediction market workflow, Kalshi & Polymarket tooling, tax season, and the iOS engineering that makes lock-screen visibility feel native.",
+    "Field notes from Cabbge — Kalshi workflow, tax season, and the iOS engineering that makes lock-screen visibility feel native.",
   alternates: { canonical: "https://cabbge.com/blog" },
 };
 
@@ -19,8 +19,8 @@ export default function BlogIndex() {
           From the desk.
         </h1>
         <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl mb-16 leading-relaxed">
-          Notes on prediction-market workflow, Kalshi & Polymarket internals,
-          tax-season tooling, and the engineering choices behind Cabbge.
+          Notes on Kalshi workflow, prediction-market internals, tax-season
+          tooling, and the engineering choices behind Cabbge.
         </p>
         <ul className="divide-y divide-white/[0.06]">
           {POSTS.map((p) => (
