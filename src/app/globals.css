@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0a0a0a;
+  --color-bg-tertiary: #141414;
+  --color-border-primary: #1f1f1f;
+  --color-border-secondary: #2a2a2a;
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #a0a0a0;
+  --color-text-tertiary: #6b6b6b;
+  --color-semantic-up: #00d632;
+  --color-semantic-down: #ff453a;
+  --color-cabbge-accent: #0a84ff;
+
+  --font-display: -apple-system, "SF Pro Display", system-ui, sans-serif;
+  --font-mono: "SF Mono", "IBM Plex Mono", Menlo, monospace;
+}
+
+* { -webkit-font-smoothing: antialiased; }
+
+html, body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+}
+
+.mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+
+/* UI/UX Pro Max — Accessibility rule #1 (CRITICAL): visible focus ring on
+   every interactive element. The default Tailwind reset removes browser
+   focus rings; we restore a high-contrast one site-wide. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-cabbge-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* UI/UX Pro Max — Animation rule: respect prefers-reduced-motion. Kills
+   transitions and animations for users who opt out at the OS level.
+   Motion library's own useReducedMotion() handles its own transitions;
+   this catches CSS-only motion (the .animate-ping in the badge, hover
+   transforms, etc.). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smooth scroll for in-page hash navigation (Features, Pricing). The
+   prefers-reduced-motion override above disables this for opted-out users. */
+html { scroll-behavior: smooth; }

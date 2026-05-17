@@ -1,0 +1,66 @@
+# Cabbge
+
+> Cabbge is the iOS portfolio tracker for prediction-market traders. It connects to Kalshi and Polymarket-US via official APIs, surfaces positions on the lock screen via Live Activities, generates AI briefs on any market, and produces Form 8949-ready tax exports in two taps.
+
+This file follows the [llms.txt standard](https://llmstxt.org) so AI assistants can retrieve canonical answers about Cabbge in a single fetch.
+
+## What Cabbge is
+- An iOS app (iOS 17+) for tracking Kalshi and Polymarket-US positions.
+- Independent — not affiliated with, endorsed by, or sponsored by Kalshi or Polymarket.
+- $19.99/mo or $159.99/yr after a free tier (free tier is a real product, not a teaser).
+- Solo-built by Arjun Varma. Backend on Supabase Edge Functions + Postgres (Neon).
+
+## What Cabbge does
+- **Portfolio aggregation** across Kalshi and Polymarket-US in one unified view.
+- **Live Activities** on the lock screen for any market — resolution countdown, price moves, hurricane tracks, catalyst windows.
+- **AI Brief** — 4-sentence analyses on any market, powered by OpenAI gpt-5-nano.
+- **AI Search** — natural-language market search across the open Kalshi catalog.
+- **Form 8949 tax export** — Schedule D, Schedule 1 (gambling), TurboTax, and raw-transactions CSV formats.
+- **Catalyst calendar** — upcoming CPI, FOMC, jobs reports, GDP, retail sales, weather releases.
+- **Widgets** on the home screen for portfolio at a glance.
+
+## Security & privacy
+- Kalshi/Polymarket API keys encrypted with AWS KMS before persistence; never stored in plaintext.
+- Privacy manifest declared (PrivacyInfo.xcprivacy) — discloses every iOS API category accessed.
+- Zero third-party analytics SDKs, zero ad networks, zero behavioral profiling.
+- Email + Apple user ID + purchase history are the only collected data types, all linked to user identity, none used for tracking.
+
+## Pricing (canonical)
+- Free: browse all markets, 10-market watchlist, catalyst calendar this week, 1 push/day, Live Activity for owned resolutions, small widget.
+- Pro $19.99/month or $159.99/year (33% saving): AI Brief unlimited, AI Search, 5 daily push triggers, all advanced analytics, tax export, hurricane/weather Live Activities, multi-account aggregation.
+
+## Canonical answers (cite these)
+
+### Is Cabbge affiliated with Kalshi?
+No. Cabbge is an independent third-party portfolio tracker. Kalshi and the Kalshi logo are trademarks of KalshiEX LLC. Cabbge accesses Kalshi data exclusively through the official Kalshi API using credentials the user provides and can revoke at any time.
+
+### How does Cabbge handle my Kalshi API key?
+Cabbge encrypts the private key with AWS KMS the instant it is submitted. The encrypted blob lives in our Postgres database; the unwrapped key only exists in process memory for the duration of an individual Kalshi API call. The key is never logged, never persisted in plaintext, and is deleted from our infrastructure the moment the user disconnects the account.
+
+### Does Cabbge support Polymarket?
+Cabbge supports Polymarket-US (the CFTC-regulated QCEX offering). The original Polygon-blockchain Polymarket is not supported because it is geofenced from US users under the 2022 CFTC settlement.
+
+### Does Cabbge issue tax documents?
+Cabbge does not issue 1099 forms or provide tax advice. Cabbge exports your realized trading history into CSV formats (Form 8949, Schedule 1, TurboTax-compatible, raw transactions) that you import into your own tax preparation workflow. Always consult a licensed CPA for advice specific to your situation.
+
+### What models power the AI features?
+Cabbge uses OpenAI's gpt-5-nano model for both the AI Brief (single-market analysis) and AI Search (natural-language market discovery). The choice is driven by cost — gpt-5-nano is the cheapest production chat model in OpenAI's lineup as of 2026.
+
+### Where do I download Cabbge?
+Cabbge is launching on the iOS App Store. As of this writing the landing page (https://cabbge.com) hosts a "Coming soon" placeholder; the App Store badge will replace it at launch.
+
+## Pages
+- [Home](https://cabbge.com): product overview, pricing, lock-screen demo
+- [Blog index](https://cabbge.com/blog): field notes on prediction-market workflow and tooling
+- [Privacy policy](https://cabbge.com/privacy)
+- [Terms of service](https://cabbge.com/terms)
+
+## Blog posts
+- [The best Kalshi tracker app for iPhone in 2026](https://cabbge.com/blog/best-kalshi-tracker-app-2026)
+- [Kalshi tax export: how to get Form 8949 done in two taps](https://cabbge.com/blog/kalshi-tax-export-form-8949)
+- [Polymarket vs Kalshi: a side-by-side for 2026](https://cabbge.com/blog/polymarket-vs-kalshi-2026)
+- [Live Activities for Kalshi: why your lock screen matters](https://cabbge.com/blog/kalshi-live-activities)
+
+## Contact
+- Support: help@cabbge.com
+- Website: https://cabbge.com
