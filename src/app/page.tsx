@@ -21,6 +21,7 @@ export default function Landing() {
     <main className="relative overflow-x-hidden bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
       <CursorSpotlight />
       <Nav />
+      <LiveTickerBar />
       <Hero />
       <PhoneGallery />
       <LiveActivityShowcase />
@@ -30,6 +31,50 @@ export default function Landing() {
       <Footer />
       <BackgroundGrain />
     </main>
+  );
+}
+
+// =============================================================================
+// LIVE TICKER BAR — a continuously-scrolling market price marquee under the nav
+// The most-obviously-moving element on the page. Pause on hover.
+// =============================================================================
+
+function LiveTickerBar() {
+  const items = [
+    { ticker: "KXFOMC-JUN", title: "Fed cuts 25bps in June", price: 47, delta: +2 },
+    { ticker: "KXCPI-MAY", title: "May CPI above 0.3%", price: 38, delta: -1 },
+    { ticker: "KXSCOTUS-25", title: "SCOTUS rules for Trump", price: 73, delta: +4 },
+    { ticker: "KXNFL-SBLX", title: "Patriots win SB LX", price: 14, delta: -3 },
+    { ticker: "KXBTC-200K", title: "BTC hits $200k in 2026", price: 22, delta: +1 },
+    { ticker: "KXHURR-FL", title: "Cat 3+ hits Florida", price: 31, delta: +5 },
+    { ticker: "KXSENATE-PA", title: "PA Senate flips D→R", price: 56, delta: -2 },
+    { ticker: "KXJOBS-280K", title: "May NFP above 280k", price: 41, delta: +3 },
+  ];
+  // Duplicate for seamless loop
+  const looped = [...items, ...items];
+  return (
+    <div
+      aria-hidden
+      className="fixed top-[68px] left-0 right-0 z-40 bg-black/60 backdrop-blur-md border-y border-white/[0.04] overflow-hidden h-9"
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10 pointer-events-none" />
+      <motion.div
+        className="flex items-center gap-8 whitespace-nowrap h-full will-change-transform"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 60, ease: "linear", repeat: Infinity }}
+      >
+        {looped.map((it, i) => (
+          <div key={i} className="flex items-center gap-2 text-xs">
+            <span className="text-[var(--color-text-tertiary)] mono uppercase tracking-wider">{it.ticker}</span>
+            <span className="text-white/80 max-w-[200px] truncate">{it.title}</span>
+            <span className="text-white mono tabular-nums font-semibold">{it.price}¢</span>
+            <span className={`mono tabular-nums text-[11px] ${it.delta >= 0 ? "text-[var(--color-semantic-up)]" : "text-[var(--color-semantic-down)]"}`}>
+              {it.delta >= 0 ? "+" : ""}{it.delta}¢
+            </span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
   );
 }
 
@@ -163,7 +208,8 @@ function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
-    <section ref={ref} className="relative pt-40 pb-32 px-6 min-h-[100vh]">
+    // Extra top padding to clear both the fixed nav AND the new ticker bar.
+    <section ref={ref} className="relative pt-48 pb-32 px-6 min-h-[100vh]">
       <Aurora />
       <AnimatedSparkline />
       <div className="relative max-w-6xl mx-auto w-full grid lg:grid-cols-[1.2fr_1fr] gap-16 items-center">
@@ -209,10 +255,139 @@ function Hero() {
         </motion.div>
 
         <motion.div style={{ y: phoneY }} className="flex justify-center lg:justify-end relative">
-          <PhoneMockupScreenshot src="/screenshots/markets.png" alt="Cabbge Markets tab — search, category filters, and the day's resolving markets" />
+          <PhoneMockupLiveMarkets />
         </motion.div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Live HTML mock of the Markets tab inside a phone bezel — built so the
+ * prices tick every 2.5s and the page feels alive. This is what replaces
+ * the empty skeleton-state PNG that was sitting in the hero before.
+ */
+function PhoneMockupLiveMarkets() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setTick((n) => n + 1), 2500);
+    return () => clearInterval(t);
+  }, []);
+
+  // 4 anonymized markets — never real positions, always public/well-known
+  // questions. Prices "wobble" deterministically based on tick.
+  const markets = [
+    { ticker: "KXFOMC-JUN", title: "Fed cuts 25bps in June",  basePrice: 47, vol: "$1.2M" },
+    { ticker: "KXCPI-MAY",  title: "May CPI above 0.3%",      basePrice: 38, vol: "$840k" },
+    { ticker: "KXBTC-200K", title: "BTC hits $200k by EOY",   basePrice: 22, vol: "$2.1M" },
+    { ticker: "KXSCOTUS-25", title: "SCOTUS rules on case",   basePrice: 73, vol: "$680k" },
+  ];
+
+  return (
+    <div className="relative w-[300px] h-[620px]">
+      <div className="absolute inset-0 -m-8 rounded-[60px] bg-[radial-gradient(circle_at_center,_var(--color-cabbge-accent)_0%,_transparent_55%)] opacity-30 blur-2xl" />
+      <div className="relative w-full h-full rounded-[55px] bg-gradient-to-b from-[#2a2a2a] to-[#0a0a0a] p-[2px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
+        <div className="w-full h-full rounded-[53px] bg-[#0a0a0a] overflow-hidden relative">
+          {/* Dynamic Island */}
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-[110px] h-[34px] bg-black rounded-full z-20" />
+          {/* Status bar */}
+          <div className="absolute top-4 left-7 text-white text-sm font-semibold z-10">9:41</div>
+          <div className="absolute top-4 right-7 z-10 text-white text-xs">●●●</div>
+
+          {/* App content */}
+          <div className="pt-16 px-5 pb-20 h-full overflow-hidden">
+            {/* Header with cabbge logo */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Image src="/logo.png" alt="" width={24} height={24} className="rounded-md" />
+              </div>
+              <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-[var(--color-semantic-up)] text-[10px]">★</div>
+            </div>
+            <h2 className="text-white text-3xl font-bold tracking-tight mb-3">Markets</h2>
+            {/* Search */}
+            <div className="rounded-full bg-white/[0.06] px-4 py-2.5 mb-4 flex items-center gap-2">
+              <span className="text-white/40 text-sm">⌕</span>
+              <span className="text-white/40 text-sm">Search markets</span>
+            </div>
+            {/* Filter chips */}
+            <div className="flex gap-2 mb-4 overflow-hidden">
+              <span className="px-3 py-1 rounded-full bg-white text-black text-[11px] font-semibold whitespace-nowrap">∞ All</span>
+              <span className="px-3 py-1 rounded-full bg-white/[0.06] text-white/70 text-[11px] whitespace-nowrap">Sports</span>
+              <span className="px-3 py-1 rounded-full bg-white/[0.06] text-white/70 text-[11px] whitespace-nowrap">Politics</span>
+              <span className="px-3 py-1 rounded-full bg-white/[0.06] text-white/70 text-[11px] whitespace-nowrap">CPI</span>
+            </div>
+            {/* TODAY section header */}
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[var(--color-text-tertiary)] text-[10px] uppercase tracking-wider">Today</span>
+              <span className="flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-1.5 w-1.5 rounded-full bg-[var(--color-semantic-up)] motion-safe:animate-ping opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--color-semantic-up)]" />
+              </span>
+            </div>
+            {/* Market cards — animated prices */}
+            <div className="space-y-2.5">
+              {markets.map((m, i) => (
+                <LiveMarketCard key={m.ticker} market={m} tick={tick + i} />
+              ))}
+            </div>
+          </div>
+
+          {/* Tab bar */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] h-14 rounded-full bg-black/80 backdrop-blur-xl border border-white/[0.06] flex items-center justify-around px-2 z-10">
+            {[
+              { l: "Portfolio", a: false },
+              { l: "Markets", a: true },
+              { l: "Catalysts", a: false },
+              { l: "Performance", a: false },
+              { l: "Settings", a: false },
+            ].map((t) => (
+              <div key={t.l} className="flex flex-col items-center gap-0.5">
+                <div className={`w-5 h-5 rounded ${t.a ? "bg-[var(--color-semantic-up)]/20" : "bg-white/[0.04]"}`} />
+                <span className={`text-[8px] ${t.a ? "text-[var(--color-semantic-up)]" : "text-white/40"}`}>{t.l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LiveMarketCard({ market, tick }: { market: { ticker: string; title: string; basePrice: number; vol: string }; tick: number }) {
+  // Deterministic price wobble keyed off tick. Looks like a live tape.
+  const wobble = ((tick * 7) % 9) - 4; // -4..+4
+  const price = Math.max(1, Math.min(99, market.basePrice + wobble));
+  const delta = wobble;
+  const up = delta >= 0;
+  return (
+    <div className="rounded-xl bg-white/[0.03] border border-white/[0.05] p-3">
+      <div className="text-white/85 text-[12px] leading-tight mb-2 line-clamp-1">{market.title}</div>
+      <div className="flex items-end justify-between">
+        <motion.div
+          key={price}
+          initial={{ scale: 1.05, color: up ? "#00d632" : "#ff453a" }}
+          animate={{ scale: 1, color: "#ffffff" }}
+          transition={{ duration: 0.6 }}
+          className="text-white text-2xl font-bold mono tabular-nums"
+        >
+          {price}¢
+        </motion.div>
+        <div className="flex flex-col items-end gap-0.5">
+          <span className={`text-[10px] mono tabular-nums font-semibold ${up ? "text-[var(--color-semantic-up)]" : "text-[var(--color-semantic-down)]"}`}>
+            {up ? "+" : ""}{delta}¢
+          </span>
+          <span className="text-white/40 text-[9px] mono">{market.vol}</span>
+        </div>
+      </div>
+      {/* Yes/no bar */}
+      <div className="mt-2 h-1 rounded-full overflow-hidden bg-white/[0.04] flex">
+        <motion.div
+          animate={{ width: `${price}%` }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="h-full bg-[var(--color-semantic-up)]/60"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -365,10 +540,14 @@ function PhoneMockupScreenshot({ src, alt, scale = 1 }: { src: string; alt: stri
 // =============================================================================
 
 function PhoneGallery() {
+  // Three visually-distinct screens: Portfolio (cabbage mascot hero
+  // empty state), Catalysts (macro calendar list), Performance (empty
+  // state with equity-curve placeholder + stats grid). Each is its own
+  // visual personality so the triptych reads as variety, not repetition.
   const phones = [
-    { src: "/screenshots/portfolio.png", alt: "Portfolio tab — Cabbge mascot, empty state CTA", rotate: -8, y: 30 },
-    { src: "/screenshots/market-detail.png", alt: "Market Detail — current price, orderbook, alerts", rotate: 0, y: 0 },
-    { src: "/screenshots/catalysts.png", alt: "Catalysts tab — calendar of upcoming macro releases", rotate: 8, y: 30 },
+    { src: "/screenshots/portfolio.png",   alt: "Portfolio tab — the cabbge mascot greets Explorer users with 'Track your positions live' and a Connect Account CTA", rotate: -8, y: 30 },
+    { src: "/screenshots/catalysts.png",   alt: "Catalysts tab — calendar of upcoming macro releases (Jobs, CPI, Retail, Fed, PCE, GDP) with consensus and prior values",      rotate:  0, y:  0 },
+    { src: "/screenshots/performance.png", alt: "Performance tab — All-Time P&L hero, equity curve, and the stats grid (win rate, wins/losses, realized/unrealized, slippage, hold)", rotate:  8, y: 30 },
   ];
   return (
     <section className="relative py-32 px-6 overflow-hidden">
@@ -679,18 +858,69 @@ function VenueVisual() {
       </div>
       <div className="flex h-2 rounded-full overflow-hidden gap-px">
         {[55, 30, 15].map((pct, i) => (
-          <div key={i} style={{ width: `${pct}%`, background: venues[i].color }} className="h-full" />
+          <motion.div
+            key={i}
+            initial={{ width: 0 }}
+            whileInView={{ width: `${pct}%` }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 1.0, delay: i * 0.15, ease: "easeOut" }}
+            style={{ background: venues[i].color }}
+            className="h-full"
+          />
         ))}
       </div>
       <div className="grid grid-cols-3 gap-2 mt-3">
-        {venues.map((v, i) => (
+        {venues.map((v) => (
           <div key={v.name} className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: v.color }} />
             <span className="text-[10px] text-white/60">{v.name}</span>
           </div>
         ))}
       </div>
+      {/* Draw-on-scroll equity curve so this card has a moving graphic. */}
+      <AnimatedEquityChart />
     </div>
+  );
+}
+
+/** Equity curve that draws itself when it scrolls into view. */
+function AnimatedEquityChart() {
+  // Pre-baked deterministic points — SSR-safe.
+  const points = [
+    [0, 50], [25, 48], [50, 52], [75, 45], [100, 40],
+    [125, 42], [150, 35], [175, 38], [200, 30], [225, 28],
+    [250, 22], [275, 25], [300, 18],
+  ];
+  const d = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p[0]} ${p[1]}`).join(" ");
+  const areaD = `${d} L 300 60 L 0 60 Z`;
+  return (
+    <svg viewBox="0 0 300 60" className="mt-3 w-full h-12" aria-hidden>
+      <defs>
+        <linearGradient id="equityArea" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%"   stopColor="var(--color-semantic-up)" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="var(--color-semantic-up)" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <motion.path
+        d={areaD}
+        fill="url(#equityArea)"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+      />
+      <motion.path
+        d={d}
+        fill="none"
+        stroke="var(--color-semantic-up)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 1.4, ease: "easeInOut" }}
+      />
+    </svg>
   );
 }
 
